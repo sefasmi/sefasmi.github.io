@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DoctorGo - On-Demand Healthcare</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#2E86C1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="DoctorGo">
+    
+    <!-- Favicon and Icons -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjMkU4NkMxIi8+PHRleHQgeD0iMTYiIHk9IjIyIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7wn6mzPC90ZXh0Pjwvc3ZnPg==">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgZmlsbD0iIzJFODZDMSIvPjx0ZXh0IHg9Ijk2IiB5PSIxMTAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSI5NiIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPvCfqbM8L3RleHQ+PC9zdmc+">
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="logo">
+                <i class="fas fa-user-md"></i>
+                <h1>DoctorGo</h1>
+            </div>
+            <div class="loading-spinner"></div>
+            <p>Loading healthcare services...</p>
+        </div>
+    </div>
+
+    <!-- App Container -->
+    <div id="app" class="app-container" style="display: none;">
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="screen active">
+            <div class="welcome-content">
+                <div class="logo-section">
+                    <i class="fas fa-user-md logo-icon"></i>
+                    <h1>DoctorGo</h1>
+                    <p>On-demand healthcare at your doorstep</p>
+                </div>
+                
+                <div class="role-selection">
+                    <h2>Join as:</h2>
+                    <div class="role-buttons">
+                        <button class="role-btn patient-btn" onclick="selectRole('patient')">
+                            <i class="fas fa-user"></i>
+                            <span>Patient</span>
+                            <small>Looking for a doctor</small>
+                        </button>
+                        <button class="role-btn doctor-btn" onclick="selectRole('doctor')">
+                            <i class="fas fa-stethoscope"></i>
+                            <span>Doctor</span>
+                            <small>Offering consultations</small>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="auth-buttons">
+                    <button class="btn btn-primary" onclick="showLogin()">Login</button>
+                    <button class="btn btn-secondary" onclick="showSignup()">Sign Up</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Screen -->
+        <div id="login-screen" class="screen">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <button class="back-btn" onclick="showWelcome()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2>Welcome Back</h2>
+                </div>
+                
+                <form id="login-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="login-email">Email or Phone</label>
+                        <input type="text" id="login-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary full-width">Login</button>
+                </form>
+                
+                <div class="auth-divider">
+                    <span>or</span>
+                </div>
+                
+                <button class="btn btn-google" onclick="loginWithGoogle()">
+                    <i class="fab fa-google"></i>
+                    Continue with Google
+                </button>
+                
+                <p class="auth-switch">
+                    Don't have an account? <a href="#" onclick="showSignup()">Sign up</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Signup Screen -->
+        <div id="signup-screen" class="screen">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <button class="back-btn" onclick="showWelcome()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2>Create Account</h2>
+                </div>
+                
+                <form id="signup-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="signup-name">Full Name</label>
+                        <input type="text" id="signup-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-email">Email</label>
+                        <input type="email" id="signup-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-phone">Phone Number</label>
+                        <input type="tel" id="signup-phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-password">Password</label>
+                        <input type="password" id="signup-password" required>
+                    </div>
+                    
+                    <!-- Doctor-specific fields -->
+                    <div id="doctor-fields" class="doctor-fields" style="display: none;">
+                        <div class="form-group">
+                            <label for="specialization">Specialization</label>
+                            <select id="specialization" required>
+                                <option value="">Select specialization</option>
+                                <option value="general">General Practitioner</option>
+                                <option value="internist">Internist</option>
+                                <option value="pediatrician">Pediatrician</option>
+                                <option value="cardiologist">Cardiologist</option>
+                                <option value="dermatologist">Dermatologist</option>
+                                <option value="neurologist">Neurologist</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="experience">Years of Experience</label>
+                            <input type="number" id="experience" min="0" max="50" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="license">Medical License</label>
+                            <input type="file" id="license" accept="image/*,.pdf" required>
+                            <small>Upload your medical license for verification</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="consultation-fee">Consultation Fee (BDT)</label>
+                            <input type="number" id="consultation-fee" min="100" required>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary full-width">Create Account</button>
+                </form>
+                
+                <div class="auth-divider">
+                    <span>or</span>
+                </div>
+                
+                <button class="btn btn-google" onclick="signupWithGoogle()">
+                    <i class="fab fa-google"></i>
+                    Continue with Google
+                </button>
+                
+                <p class="auth-switch">
+                    Already have an account? <a href="#" onclick="showLogin()">Login</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Patient Dashboard -->
+        <div id="patient-dashboard" class="screen">
+            <div class="dashboard-container">
+                <!-- Header -->
+                <div class="dashboard-header">
+                    <div class="user-info">
+                        <div class="avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="user-details">
+                            <h3 id="patient-name">Welcome</h3>
+                            <p>Patient</p>
+                        </div>
+                    </div>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <h3>How can we help you today?</h3>
+                    <div class="symptoms-input">
+                        <textarea id="symptoms" placeholder="Describe your symptoms (e.g., fever, headache, stomach pain)..." rows="3"></textarea>
+                        <button class="btn btn-primary" onclick="findDoctors()">
+                            <i class="fas fa-search"></i>
+                            Find Doctors
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Emergency Button -->
+                <div class="emergency-section">
+                    <button class="btn btn-emergency" onclick="requestEmergency()">
+                        <i class="fas fa-ambulance"></i>
+                        Emergency
+                    </button>
+                </div>
+                
+                <!-- Recent Bookings -->
+                <div class="recent-bookings">
+                    <h3>Recent Consultations</h3>
+                    <div id="recent-bookings-list" class="bookings-list">
+                        <p class="no-bookings">No recent consultations</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Doctor Dashboard -->
+        <div id="doctor-dashboard" class="screen">
+            <div class="dashboard-container">
+                <!-- Header -->
+                <div class="dashboard-header">
+                    <div class="user-info">
+                        <div class="avatar">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <div class="user-details">
+                            <h3 id="doctor-name">Dr. Welcome</h3>
+                            <p>Doctor</p>
+                        </div>
+                    </div>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+                
+                <!-- Availability Toggle -->
+                <div class="availability-section">
+                    <div class="availability-toggle">
+                        <span>Available for consultations</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="availability-toggle" onchange="toggleAvailability()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div id="online-status" class="status-indicator offline">
+                        <span class="status-dot"></span>
+                        <span>Offline</span>
+                    </div>
+                </div>
+                
+                <!-- Statistics -->
+                <div class="stats-section">
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <div>
+                            <h4 id="patients-served">0</h4>
+                            <p>Patients Served</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-star"></i>
+                        <div>
+                            <h4 id="doctor-rating">0.0</h4>
+                            <p>Rating</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <div>
+                            <h4 id="earnings">৳0</h4>
+                            <p>Today's Earnings</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pending Requests -->
+                <div class="requests-section">
+                    <h3>Consultation Requests</h3>
+                    <div id="requests-list" class="requests-list">
+                        <p class="no-requests">No pending requests</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Bar -->
+        <nav id="bottom-nav" class="bottom-nav" style="display: none;">
+            <button class="nav-item active" data-screen="dashboard">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </button>
+            <button class="nav-item" data-screen="search">
+                <i class="fas fa-search"></i>
+                <span>Search</span>
+            </button>
+            <button class="nav-item" data-screen="bookings">
+                <i class="fas fa-calendar"></i>
+                <span>Bookings</span>
+            </button>
+            <button class="nav-item" data-screen="profile">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/patient.js"></script>
+    <script src="assets/js/doctor.js"></script>
+    <script src="assets/js/geolocation.js"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(registration => console.log('SW registered'))
+                .catch(error => console.log('SW registration failed'));
+        }
+    </script>
+</body>
+</html>
